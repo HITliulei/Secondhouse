@@ -1,0 +1,466 @@
+.nothiddenthing {
+	z-index: 1;
+}
+.hiddenthing {
+	z-index: 2;
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+.hiddenbackground {
+	z-index: 3;
+	background-color: #000;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	filter: Alpha(opacity = 80);
+	opacity: 0.8;
+}
+
+.logo {
+	height: 150px;
+	width: 100%;
+	top: 30px;
+	border-bottom: solid;
+	border-color: #dcdcdc;
+}
+
+.logo-logo {
+	height: 100%;
+	width: 20%;
+	float: left;
+}
+
+.logo-logo img {
+	height: 100%;
+	width: 150px;
+	margin-left: 50px;
+}
+
+.logo-gouwuche {
+	height: 50%;
+	width: 70%;
+	float: left;
+	list-style: none;
+}
+
+.logo-gouwuche-rongqi {
+	float: right;
+	margin-right: 100px;
+}
+
+.logo-gouwuche a {
+	text-decoration: none;
+	font-size: 15px;
+	font-weight: lighter;
+	color: darkgray;
+}
+
+.logo-gouwuche li {
+	padding: 20px auto;
+	margin-left: 40px;
+	float: left;
+}
+
+.logo-search {
+	height: 50%;
+	width: 80%;
+	float: left;
+}
+
+.logo-search-rongqi {
+	height: 31px;
+	width: 694px;
+	margin: auto;
+	border: 3px solid orange;
+	border-radius: 0em 2em 2em 0em;
+}
+
+.logo-search-rongqi-sort {
+	height: 30px;
+	width: 50px;
+}
+
+.logo-search-rongqi-text {
+	height: 24px;
+	width: 600px;
+}
+
+.logo-search-rongqi-button {
+	height: 30px;
+	width: 40px;
+	float: right;
+	border-radius: 0em 2em 2em 0em;
+	background-color: aqua;
+	cursor: pointer;
+}
+
+.sort_and_goods {
+	width: 80%;
+	height: 350px;
+	margin-left: 10%;
+}
+
+.sort {
+	height: 350px;
+	width: 15%;
+	margin-left: 2%;
+	position: relative;
+	float: left;
+	border: 1px solid orange;
+}
+
+.sort a {
+	text-decoration: none;
+	color: gray;
+	font-weight: lighter;
+	margin-left: 40px;
+}
+
+.navigation {
+	position: fixed;
+	height: 350px;
+	width: 5%;
+	top: 180px;
+	left: 95%;
+	font-size: 13px;
+	font-family: 华文细黑;
+}
+
+.navigation-top {
+	width: 60%;
+	height: 15%;
+	cursor: pointer;
+	margin-top: 8%;
+	margin-left: 20%;
+	border-bottom: 0.5px solid darkgray;
+	color: gold;
+}
+
+.navigation-top div {
+	width: 100%;
+	height: 50%;
+	text-align: center;
+}
+
+.navigation-zhekou {
+	width: 60%;
+	height: 15%;
+	cursor: pointer;
+	margin-top: 8%;
+	margin-left: 20%;
+	border-bottom: 0.5px solid darkgray;
+	text-align: center;
+	color: lime;
+}
+
+.navigation-remai {
+	width: 60%;
+	height: 15%;
+	cursor: pointer;
+	margin-top: 8%;
+	margin-left: 20%;
+	border-bottom: 0.5px solid darkgray;
+	text-align: center;
+	color: aqua;
+}
+
+.navigation-bottom {
+	width: 60%;
+	height: 15%;
+	cursor: pointer;
+	margin-top: 8%;
+	margin-left: 20%;
+	text-align: center;
+	color: orangered;
+}
+
+.navigation-top a {
+	width: 100%;
+	height: 50%;
+	text-align: center;
+}
+
+.goods {
+	width: 80%;
+	margin-left: 2%;
+	height: 350px;
+	position: relative;
+	float: left;
+}
+
+.goods-huodong {
+	background-color: darkgrey;
+	width: 60%;
+	height: 100%;
+	position: relative;
+	float: left;
+}
+
+.goods-remai {
+	background-color: yellow;
+	width: 38%;
+	height: 100%;
+	position: relative;
+	float: right;
+}
+
+.goods img {
+	width: 100%;
+	height: 100%;
+}
+
+.others {
+	width: 80%;
+	height: 7200px;
+	margin-left: 10%;
+	margin-top: 50px;
+}
+
+.aboutus {
+	margin-top: 100px;
+	height: 100px;
+	width: 100%;
+	text-align: center;
+	text-height: 100px;
+	background: aliceblue;
+}
+
+.aboutus div {
+	height: 40%;
+	width: 100%;
+}
+
+.aboutus a {
+	margin-left: 40px;
+	margin-right: 40px;
+	text-decoration: none;
+	color: dimgrey;
+}
+
+.others-biaoti {
+	background-color: aqua;
+	line-height: 40px;
+	height: 50px;
+}
+
+.others-neirong {
+	height: 350px;
+}
+
+.others-one {
+	height: 400px;
+	width: 100%;
+}
+
+.others-neirong-one {
+	height: 100%;
+	width: 24.7%;
+	border: 1px solid #dcdcdc;
+	position: relative;
+	float: left;
+}
+
+.others-neirong-one-tupian {
+	height: 70%;
+	width: 100%;
+}
+
+.others-neirong-one-tupian img {
+	height: 90%;
+	width: 80%;
+	margin-top: 5%;
+	margin-left: 10%;
+}
+
+.others a {
+	text-decoration: none;
+	font-size: 13px;
+	color: gray;
+}
+
+.others-neirong-one-jieshao {
+	height: 20%;
+	width: 80%;
+	margin-left: 10%;
+}
+
+.others-neirong-one-jiage {
+	height: 10%;
+	width: 80%;
+	margin-left: 10%;
+}
+
+#denglu1 {
+	position: fixed;
+	height: 450px;
+	width: 450px;
+	top: 170px;
+	left: 500px;
+	border: 1px solid red;
+	z-index: 4;
+}
+
+#denglu2 {
+	position: fixed;
+	height: 300px;
+	width: 450px;
+	top: 170px;
+	left: 500px;
+	border: 1px solid red;
+	z-index: 4;
+}
+
+#denglu3 {
+	position: fixed;
+	height: 450px;
+	width: 450px;
+	top: 170px;
+	left: 500px;
+	border: 1px solid red;
+	z-index: 4;
+}
+
+.denglu_top {
+	position: relative;
+	top: 20px;
+	height: 100px;
+	width: 100%;
+}
+
+.denglu_top_logo {
+	position: relative;
+	top: 0;
+	left: 10px;
+	height: 100%;
+	width: 100px;
+}
+
+.denglu_top_right {
+	position: absolute;
+	top: 0px;
+	left: 150px;
+	height: 100%;
+	width: 250px;
+}
+
+.denglu_top_right span {
+	position: absolute;
+	top: 30px;
+	left: 20px;
+}
+
+.login {
+	position: absolute;
+	top: 120px;
+	left: 0px;
+	height: 330px;
+	width: 100%;
+}
+
+.login_yonghu {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 60px;
+}
+
+.login_mima {
+	position: absolute;
+	top: 80px;
+	left: 0px;
+	width: 100%;
+	height: 60px;
+}
+
+.login_yanzheng {
+	position: absolute;
+	top: 160px;
+	left: 0px;
+	width: 100%;
+	height: 60px;
+}
+
+.login_btn {
+	position: absolute;
+	top: 240px;
+	left: 0px;
+	width: 100%;
+	height: 60px;
+}
+
+#denglu2 .login_btn {
+	position: absolute;
+	top: 90px;
+	left: 0px;
+	width: 100%;
+	height: 60px;
+}
+.information {
+	position: absolute;
+	top: 300px;
+	left: 0px;
+	height: 30px;
+	width: 100%;
+}
+
+.information_left {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	height: 30px;
+	width: 100px;
+}
+
+.information_right {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	height: 30px;
+	width: 100px;
+}
+
+
+#menu {
+	            position:relative;
+				height: 50px;
+				top: -20px;
+				left: 250px;
+			}
+			
+			#menu,
+			#menu ul {
+				padding: 0;
+				margin: 0;
+				list-style: none;
+			}
+			
+			#menu li {
+				float: left;
+				background-color: black;
+				border-right: 1px solid #FFFFFF;
+				margin: 20px;
+			}
+			
+			#menu a {
+				display: block;
+				padding: 5px;
+				color: darkgray;
+				width: 80px;
+			}
+			
+			#menu li ul {
+				position: absolute;
+				left: auto;
+				width: 80px;
+			}
+			
+			.active {
+				background-color: blanchedalmond;
+			}

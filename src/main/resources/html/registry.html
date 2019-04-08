@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>二手房用户注册</title>
+    <script src="js/jquery-1.8.3.js"></script>
+    <style type="text/css">
+        #top {
+            width: 1300px;
+            height: 60px;
+            background-color: white;
+            border-bottom: 2px solid #dcdcdc;
+            display: flex;
+            align-items: center;
+            margin: auto;
+        }
+        .top_left {
+            position: relative;
+            left: 100px;
+        }
+        .top_right {
+
+            position: relative;
+            left: 700px;
+        }
+
+        .top_right a {
+            margin: 10px;
+            color: #a3a3a3;
+            text-decoration: none;
+        }
+
+        #form {
+            height: 500px;
+            padding-top: 70px;
+            padding-left: 100px;
+            margin-bottom: 10px;
+        }
+
+        #father {
+            border: 0px solid white;
+            padding-left: 307px;
+            border-radius: 20px 20px 20px 20px;
+        }
+
+        #form2 {
+            border: 5px solid gray;
+            width: 660px;
+            height: 450px;
+            border-radius: 20px 20px 20px 20px;
+        }
+    </style>
+    <script>
+        function showTips(id,info){
+            document.getElementById(id+"span").innerHTML="<font color='gray'>"+info+"</font>";
+        }
+
+        function check(id,info){
+            //1.获取用户输入的用户名数据
+            var uValue = document.getElementById(id).value;
+            //2.进行校验
+            if(uValue==""){
+                document.getElementById(id+"span").innerHTML="<font color='red'>"+info+"</font>";
+            }else{
+                $.ajax({
+                    url:"http://localhost:8088/secondhouse/userservice/checkusername?username=" + document.getElementById("user").value,
+                    type:"GET",
+                    success:function(data){
+                        if(data != null){
+                            document.getElementById("userspan").innerHTML = "<font color='red'>该用户名已经存在</font>";
+                        }else{
+                            document.getElementById(id+"span").innerHTML="<img src='images/checked.gif'>";
+                        }
+                    },
+                    dataType:"json"
+                });
+
+            }
+        }
+        function sure_mima(){
+            var a = document.getElementById("repasswordspan").innerHTML ="<font color='gray'>请确认与密码输入相同</font>"
+        }
+
+        function sure_mima1(){
+            document.getElementById("repasswordspan").innerHTML=""
+            var repvalue = document.getElementById("repassword").value;
+            var pvalue = document.getElementById("password").value;
+            if(repvalue==""){
+                document.getElementById("repasswordspan").innerHTML="<font color='red'>请确认密码</font>";
+            }else if(repvalue != pvalue){
+                document.getElementById("repasswordspan").innerHTML="<font color='red'>两次输入密码不正确</font>";
+            }else{
+                document.getElementById("repasswordspan").innerHTML="<img src='images/checked.gif'>";
+            }
+        }
+        function zhucea() {
+            var username = document.getElementById("user").value;
+            var password = document.getElementById("repassword").value;
+            var email =  document.getElementById("email").value;
+            console.log(username)
+            $.ajax({
+                url:"http://localhost:8088/secondhouse/userservice/registry?username="+username +"&password="+password+"&email=" +email,
+                async:true,
+                type:"POST",
+                success:function(data){
+                    window.location.href = "registersuccess.html";
+                },
+                error:function () {
+                    alert("注册失败")
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript" src="js/jquery-1.8.3.js"></script></head>
+<body>
+<div id="top">
+    <div class="top_left">
+        <span><font style="font-family:方正舒体;font-size:200%;color:red">二手房交易市场</font></span>
+    </div>
+    <div class="top_right">
+        <a href="index.html">首页</a>
+    </div>
+</div>
+<div id="form">
+    <form  method="post" id="registForm">
+        <div id="father">
+            <div id="form2">
+                <table border="0px" width="100%" height="100%" align="center" cellpadding="0px" cellspacing="0px" bgcolor="white">
+                    <tr>
+                        <td colspan="2">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <font size="5">用户注册</font>&nbsp;&nbsp;&nbsp;USER REGISTER
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="180px">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                            用户名
+                        </td>
+                        <td>
+                            <em style="color: red;">*</em>&nbsp;&nbsp;&nbsp;<input type="text" name="uusername" size="35px" id="user" placeholder="请输入用户名并且不少于3位" onfocus="showTips('user','用户名必填！')"
+                                                                                   onblur="check('user','用户名不能为空！')" />
+                            <span id="userspan"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 密码
+                        </td>
+                        <td>
+                            <em style="color: red;">*</em>&nbsp;&nbsp;&nbsp;<input type="password" name="upassword" size="35px" id="password" placeholder="请输入密码并且不少于6位"  onfocus="showTips('password','密码必填')"
+                                                                                   onblur="check('password','密码不能为空!')"/>
+                            <span id="passwordspan"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 确认密码
+                        </td>
+                        <td>
+                            <em style="color: red;">*</em>&nbsp;&nbsp;&nbsp;<input type="password" name="repassword" id="repassword" size="35px" onfocus="sure_mima()" onblur="sure_mima1()"/><span id="repasswordspan"></span>
+                        </td>
+                    </tr>
+                    <!-- <tr>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 性别
+                        </td>
+                        <td>
+                            <em style="color: red;">*</em>&nbsp;&nbsp;&nbsp;<input type="text" name="usex" size="35px" id="usex" />
+                        </td>
+                    </tr> -->
+                    <tr>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 邮箱
+                        </td>
+                        <td>
+                            <em style="color: red;">*</em>&nbsp;&nbsp;&nbsp;<input type="text" name="email" size="35px" id="email" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" value="注      册" height="50px" onclick="zhucea()"/>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

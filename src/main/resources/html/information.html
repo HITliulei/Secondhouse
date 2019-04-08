@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息管理</title>
+    <script src="js/jquery-1.8.3.js"></script>
+    <script>
+        function chongzhi(){
+            window.location.reload();
+        }
+        function dengji(){
+            window.location.href = "houseAdd.html"
+        }
+
+        function h(){
+            window.location.href = 'houseList.html';
+        }
+
+        function m(){
+            window.location.href = 'messagerecieved.html';
+        }
+
+        function m1(){
+            window.location.href = 'messagesend.html';
+        }
+        function order(){
+            window.location.href = 'orderlist.html';
+        }
+        window.onload = function () {
+            var user = JSON.parse(sessionStorage.getItem("login_user"));
+            $("#username").val(user.u_username);
+            $("#email").val(user.u_email);
+            $("#oldmima").val(user.u_password);
+            $("#newmimaaggain").val(user.u_password);
+            $("#newmima").val(user.u_password);
+            $("#date").val(user.u_data);
+            $("#a").click(function () {
+                $.ajax({
+                    url:'http://localhost:8088/secondhouse/userservice/updateusers?id='+user.u_id+'&username='+ document.getElementById("username").value+'&password='+document.getElementById("newmima").value,
+                    type:'POST',
+                    success:function(data) {
+                        alert("修改成功，请从新登录");
+                        sessionStorage.removeItem("login_user");
+                        window.location.href = "index.html";
+                    },
+                    error: function(data) {
+                        alert("修改失败")
+                        window.location.href = 'index.html'
+                        console.log(document.getElementById("username").value)
+                    }
+                })
+            })
+        }
+    </script>
+
+    <style>
+
+        .logo2 {
+            width:100%;
+            height:55px;
+            background-color: yellow;
+            display: flex;
+        }
+
+        .logo2-rongqi {
+            width:20%;
+            height:100%;
+        }
+
+        .logo2-rongqi-logo {
+            cursor: pointer;
+        }
+
+
+        .logo2-ziti {
+            font-family:方正舒体;
+            font-size:50px;
+            color: red;
+            margin-left:50px;
+        }
+
+        .window {
+            height:600px;
+            width:70%;
+            margin-left:15%;
+            border:1px solid #000;
+            border-top:none;
+        }
+
+        .window-xiala {
+            size: 1px;
+        }
+    </style>
+
+</head>
+<body style="width:1380px;">
+
+<div class = "logo2">
+    <div class = "logo2-rongqi">
+        <div class = "logo2-rongqi-logo" onclick = jump()><font class = "logo2-ziti">个人资料</font></div>
+    </div>
+
+    <h2>个人资料</h2>
+</div>
+
+<div class = "window">
+    <form action="username" class = "window-others" style = "margin: 0 auto; width: 300px;" method = "post">
+        <input type="hidden" id = "userid" value="${login_user.u_id}" />
+        <p>
+            <span class = "window-biaoqian">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</span>
+            <span><input type="text" class = "window-nicheng"  name="username" id="username"></span>
+        </p>
+        <p>
+            <span class = "window-biaoqian">邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱</span>
+            <span><input type="text" class = "shouji"  name="telephone" id="email" disabled="disabled"></span>
+        </p>
+        <p>
+                <span class = "window-biaoqian">注册日期</span>
+                <span><input type="text" class = "shouji"  name="date" id="date" disabled="disabled"></span>
+            </p>
+        <p>
+            <span class = "window-biaoqian">修改密码</span>
+        </p>
+        <p>
+            <span class = "window-biaoqian">旧&nbsp;密&nbsp;码&nbsp;</span>
+            <span><input type="password" class = "window-modifypassword" name="oldpassword" id="oldmima" disabled="disabled"></span>
+        </p>
+        <p>
+            <span class = "window-biaoqian">新&nbsp;密&nbsp;码&nbsp;</span>
+            <span><input type="password" class = "window-newpassword" name="newpassword" id="newmima"></span>
+        </p>
+        <p>
+            <span class = "window-biaoqian">确认密码</span>
+            <span><input type="password" class = "window-newpassword2" name="newpassword2" id="newmimaaggain"></span>
+        </p>
+        <p>
+            <span><input type="button" style = "margin-left: 20%; float: left;" value="更改用户信息" id="a"></span>
+            <span><input type="button" value = "重置" onclick = "chongzhi()" style = "margin-left: 20%;  float: left;">
+            </span>
+            <br>
+        </p>
+    </form>
+    <button onclick="dengji()">登记二手房</button>
+    <button onclick="h()">查看自己的二手房记录</button>
+    <button onclick="m()">查看自己的接收到的消息</button>
+    <button onclick="m1()">查看自己的发送出的消息</button>
+    <button onclick="order()">查看订单</button>
+    <br></br>
+    <div id ="hou">
+    </div>
+</div>
+</body>
+</html>

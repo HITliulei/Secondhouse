@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>房源列表</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery-1.8.3.js"></script>
+    <script type="text/javascript">
+        window.onload = function(){
+            var login_user = JSON.parse(sessionStorage.getItem('controller_user'));
+            console.log(login_user)
+            if(login_user ==null){
+                window.location.href="controllerLogin.html"
+            }
+            var url = 'http://localhost:8088/secondhouse/housecontroller/selectnoreview';
+            $.ajax({
+                url:url,
+                type:'get',
+                dataType:'json',   //回掉类型
+                success:function(data) {
+                    var obj = data;
+                    if(obj!=null){
+                        $(obj).each(function (index) {
+                            var val = obj[index];
+                            if(val.h_user_id == val.h_buyer_id){
+                                $("#a").append('<tr><td>'+val.h_name+'</td><td>'+val.h_address+'</td><td>'+val.h_price+'</td><td>'+val.h_produce+'</td><td>'+val.h_date+'</td><td id="'+index+'"></tr><td id="'+index+'2"></td>');
+                                var button = document.createElement("input");
+                                button.type="button";
+                                button.value = "过审";
+                                button.onclick = function () {
+                                    as(val)
+                                }
+                                document.getElementById(index).appendChild(button);
+
+                                var button1 = document.createElement("input");
+                                button1.type="button"
+                                button1.value = "不过审";
+                                button1.onclick = function () {
+                                    as1(val)
+                                }
+                                document.getElementById(index+"2").appendChild(button1);
+
+                            }
+                        })
+                    }else{
+                        alert("暂时没有房源")
+                    }
+                },
+                error: function(data) {
+                    alert("未获得房源数据");
+                }
+            });
+            $("#tuichu").click(function () {
+                sessionStorage.removeItem('controller_user');
+                window.location.href = "index.html";
+            });
+
+            function as(val) {
+                var f = val.h_user_id;
+                $.get("http://localhost:8088/secondhouse/housecontroller/guoshenhehouse/"+val.h_id,function(){
+                    alert("审核成功");
+                    $.ajax({
+                                   url:'http://localhost:8088/secondhouse/messageService/sendtoallpeople?senderid='+f+"New second-hand housing has been announced",
+                                   type:'get',
+                                   success:function () {
+                                       alert("向所有人发送消息成功")
+                                   },error:function () {
+                                       alert("向所有人发送消息失败 ")
+                                   }
+                               })
+                    window.location.href = "controllerList.html"
+                });
+            }
+
+            function as1(val){
+                $.get("http://localhost:8088/secondhouse/housecontroller/deletehouse/"+val.h_id);
+                window.location.href = "controllerList.html";
+            }
+        }
+        function tuichu(){
+                sessionStorage.removeItem('controller_user');
+                window.location.href = "index.html"
+            }
+    </script>
+
+
+
+</head>
+<body class="housecontainer">
+<br/>
+<h1>房源列表</h1>
+<br/><br/>
+<div class="with:80%">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>地址</th>
+            <th>价格</th>
+            <th>简介</th>
+            <th>日期</th>
+            <th>过审</th>
+            <th>不过审</th>
+        </tr>
+        </thead>
+        <tbody id="a">
+        </tbody>
+    </table>
+</div>
+<div class="form-group">
+    <div class="col-sm-2 control-label" id="ad">
+    </div>
+    <button onclick="tuichu()">退出</button>
+</div>
+
+</body>
+</html>

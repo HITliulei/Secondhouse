@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>订单</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery-1.8.3.js"></script>
+    <script type="text/javascript">
+
+    function zhuye(){
+        window.location.href = 'information.html'
+    }
+        window.onload = function(){
+            var user = JSON.parse(sessionStorage.getItem('login_user'));
+            var url = 'http://localhost:8088/secondhouse/orderservice/selectordersbyuserid/'+user.u_id ;
+            $.ajax({
+                url:url,
+                type:'get',
+                dataType:'json',   //回掉类型
+                success:function(data) {
+                    var obj = data;
+                    if(obj!=null){
+                        $(obj).each(function (index) {
+                            var val = obj[index];
+                            $("#a").append('<tr><td>'+val.o_id+'</td><td>'+val.h_money+'</td><td>'+val.date+'</td><td id="'+index+'1"></td><td id="'+index+'"><td id="'+index+'3"></td></tr>');
+                            if(val.o_state == 1){
+                                document.getElementById(index+"1").innerHTML = '已经付完预约金，但是没有付尾款';
+                                var button1 = document.createElement("input");
+                                button1.type="button";
+                                button1.value = "删除";
+                                button1.onclick = function () {
+                                    $.ajax({
+                                        url:'http://localhost:8088/secondhouse/orderservice/deleteorders?id='+val.o_id,
+                                        type:'delete',
+                                        success:function () {
+                                            alert("删除成功");
+                                            window.location.href = 'orderlist.html';
+                                        },error:function () {
+                                            alert("删除失败")
+                                            window.location.href = 'orderlist.html';
+                                        }
+                                    })
+                                }
+                                document.getElementById(index+"3").appendChild(button1);
+                                console.log(val.o_id +'   ' +val.o_state)
+                            }else if(val.o_state == 2){
+                                console.log(val.o_state)
+                                document.getElementById(index+"1").innerHTML = '已经购买';
+                                var button2 = document.createElement("input");
+                                button2.type="button";
+                                button2.value = "删除";
+                                button2.onclick = function () {
+                                    $.ajax({
+                                        url:'http://localhost:8088/secondhouse/orderservice/deleteorders?id='+val.o_id,
+                                        type:'delete',
+                                        success:function () {
+                                            alert("删除成功");
+                                            window.location.href = 'houseList.html';
+                                        },error:function () {
+                                            alert("删除失败")
+                                            window.location.href = 'houseList.html';
+                                        }
+                                    })
+                                }
+                                document.getElementById(index+"3").appendChild(button2);
+                            }
+                            var button = document.createElement("input");
+                            button.type="button";
+                            button.value = "查看详细情况";
+                            button.onclick = function () {
+                                as(val)
+                            }
+                            document.getElementById(index).appendChild(button);
+                        })
+                    }
+                },
+                error: function(data) {
+                    alert("失败");
+                }
+            });
+
+            function as(val) {
+                sessionStorage.setItem("orders",JSON.stringify(val));
+                window.location.href = "order.html"
+            }
+        }
+    </script>
+
+
+
+</head>
+<body class="housecontainer">
+<br/>
+<h1>我的订单记录</h1>
+<br/><br/>
+<p>订单记录</p>
+<div class="with:80%">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>订单编号</th>
+            <th>价格</th>
+            <th>日期</th>
+            <th>状态</th>
+            <th>查看详细情况</th>
+            <th>删除</th>
+        </tr>
+        </thead>
+        <tbody id="a">
+        </tbody>
+    </table>
+</div>
+<button onclick="zhuye()">我的主页</button>
+</body>
+</html>

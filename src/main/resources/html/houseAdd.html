@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+        <html lang="en" xmlns:th="http://www.thymeleaf.org">
+        <head>
+            <meta charset="UTF-8"/>
+            <title>添加</title>
+
+            <link rel="stylesheet" href="css/bootstrap.css">
+            <script src="js/jquery-1.8.3.js"></script>
+
+            <script type="text/javascript">
+                window.onload = function () {
+                    $("#tijiao").click(function () {
+                       var a =  document.getElementById("name").value;
+
+                       var b = document.getElementById("address").value;
+                       var c = document.getElementById("price").value;
+                       var d = document.getElementById("produce").value;
+
+                       var e = JSON.parse(sessionStorage.getItem("login_user"))
+                        var f = e.u_id;
+                       var url = 'http://localhost:8088/secondhouse/housecontroller/registryhouse?name='+a+'&price='+c+'&address='+b+'&produce='+d+'&userid='+f;
+                       var content = '我发不房子了'
+                       $.ajax({
+                           url:url,
+                           type:"post",
+                           success:function () {
+                               alert("注册二手房成功成功,等待审核");
+                               
+                               window.location.href = 'index.html';
+                           },
+                           error:function () {
+                               alert("注册二手房失败")
+                           }
+                       });
+                    });
+                }
+            </script>
+        </head>
+
+<body class="container">
+    <br/>
+    <h1>添加二手房信息</h1>
+    <br/><br/>
+    <div class="with:80%">
+        <form id="myform" class="form-horizontal"   method="post">
+            <div class="form-group">
+                <label for="address" class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="address"  id="name" placeholder="name"/>
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <label for="address" class="col-sm-2 control-label">Address</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="address"  id="address" placeholder="address"/>
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <label for="produce" class="col-sm-2 control-label" >Price</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="price" id="price" placeholder="price"/>
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <label for="price" class="col-sm-2 control-label">Produce</label>
+                <div class="col-sm-10">
+                    <textarea type="textarea" class="form-control" name="produce"  id="produce" rows="5" cols="30">
+    
+                    </textarea>
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input type="button" value="提交" class="btn btn-info" id="tijiao" />
+                    &nbsp; &nbsp; &nbsp;
+                    <input type="reset" value="重置" class="btn btn-info" />
+                </div>
+    
+            </div>
+        </form>
+    </div>
+    </body>
+</html>

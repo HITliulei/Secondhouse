@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>房源列表</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery-1.8.3.js"></script>
+    <script type="text/javascript">
+        window.onload = function(){
+            var login_user = JSON.parse(sessionStorage.getItem('login_user'));
+            if(login_user ==null){
+               alert("请先登录");
+               window.location.href ='denglu.html';
+            }
+            var user = JSON.parse(sessionStorage.getItem('login_user'));
+            var url = 'http://localhost:8088/secondhouse/messageService/seerecievedmessage/'+user.u_id ;
+            $.ajax({
+                url:url,
+                timeout:10000,
+                type:'get',
+                success:function(data){
+                    if(data!=null){
+                        $(data).each(function (index) {
+                            var val = data[index];
+                            $("#a").append('<tr><td>'+val.mr_sid+'</td><td>'+val.mr_content+'</td><td>'+val.mr_date+'</td><td id="'+index+'1"></td><td id="'+index+'2"></tr>');
+                            var button = document.createElement("input");
+                            button.type="button";
+                            button.value = "回复";
+                            button.onclick = function () {
+                                var xiaoxi =prompt("请输入消息内容","");
+                                if (xiaoxi != null && xiaoxi != ""){
+                                    sendmessage(user.u_id,val.mr_sid,xiaoxi);
+                                }else{
+                                    alert("写入消息有误")
+                                }
+                            }
+                            document.getElementById(index+'1').appendChild(button);
+                            var button1 = document.createElement("input");
+                            button1.type="button";
+                            button1.value = "删除";
+                            button1.onclick = function () {
+                                shanchu(val.mr_id)
+                            }
+                            document.getElementById(index+'2').appendChild(button1);
+                        })
+                    }else{
+                        alert("还没接受到消息")
+                    }
+                },
+                error: function(data) {
+                    alert("失败1");
+                }
+            });
+
+            function sendmessage(senderid,recieverid,content) {
+                $.ajax({
+                    url:'http://localhost:8088/secondhouse/messageService/sendmessage?senderid='+senderid+'&content='+content+'&recievedid='+recieverid,
+                    type:'get',
+                    success:function () {
+                        alert("发送消息成功")
+                        window.location.href='messagerecieved.html';
+                    },
+                    error:function () {
+                        alert("发送消息失败");
+                        window.location.href = 'messagerecieved.html';
+                    }
+                })
+            }
+
+            function shanchu(id) {
+                $.ajax({
+                    url:'http://localhost:8088/secondhouse/messageService/deletrecievedmessagebyid/'+id,
+                    type:'get',
+                    success:function () {
+                        alert("删除消息成功")
+                        window.location.href = 'messagerecieved.html';
+                    },error:function () {
+                        alert("删除消息失败")
+                    }
+                })
+            }
+
+            $("#cleanup").click(function () {
+                $.ajax({
+                    url:'http://localhost:8088/secondhouse/messageService/cleanupRecievedMessage/'+user.u_id,
+                    type:'get',
+                    success:function(){
+                        alert("清空成功")
+                        window.location.href = 'messagerecieved.html'
+                    },error(){
+                        alert("清空失败")
+                        window.location.href = 'messagerecieved.html'
+                    }
+                })
+            })
+            
+        }
+    </script>
+
+</head>
+<body class="housecontainer">
+<br/>
+<h1>消息</h1>
+<br/><br/>
+<p>接收消息</p>
+<div class="with:80%">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>发送者</th>
+            <th>消息内容</th>
+            <th>消息日期</th>
+            <th>回复</th>
+            <th>删除</th>
+        </tr>
+        </thead>
+        <tbody id="a">
+        </tbody>
+    </table>
+</div>
+<button id="cleanup">清空</button>
+</body>
+</html>

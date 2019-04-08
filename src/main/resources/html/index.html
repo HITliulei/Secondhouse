@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>房源列表</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery-1.8.3.js"></script>
+    <script type="text/javascript">
+        window.onload = function(){
+            var login_user = JSON.parse(sessionStorage.getItem('login_user'));
+            if(login_user ==null){
+                $("#ad").append('<button id="denglu">登录</button><br>\n' +
+                    '        <button id="zhuce">注册</button><br>');
+            }else{
+                $("#ad").append('<button id="selfcontral">个人中心管理</button><br>\n' +
+                    '        <button id="tuichu">退出登录</button><br>');
+            }
+            var url = 'http://localhost:8088/secondhouse/housecontroller/reviewhouse';
+            $.ajax({
+                url:url,
+                type:'get',
+                dataType:'json',   //回掉类型
+                success:function(data) {
+                    var obj = data;
+                    if(obj!=null){
+                        $(obj).each(function (index) {
+                            var val = obj[index];
+                            if(val.h_state == 2){
+                                $("#a").append('<tr><td>'+val.h_name+'</td><td>'+val.h_address+'</td><td>'+val.h_price+'</td><td>'+val.h_produce+'</td><td>'+val.h_date+'</td>' +
+                                    '<td id="'+index+'"></tr>');
+                                var button = document.createElement("input");
+                                button.type="button";
+                                button.value = "查看详细情况";
+                                button.onclick = function () {
+                                    as(val)
+                                }
+                                document.getElementById(index).appendChild(button);
+                            }
+                        })
+                    }else{
+                        alert("暂时没有房源")
+                    }
+                },
+                error: function(data) {
+                    alert("未获得房源数据");
+                }
+            });
+
+            $("#zhuce").click(function (){
+                window.location.href = "registry.html";
+            });
+
+            $("#denglu").click(function () {
+                window.location.href = "denglu.html";
+            })
+
+            $("#selfcontral").click(function () {
+                window.location.href = "information.html";
+            });
+
+            $("#tuichu").click(function () {
+                sessionStorage.removeItem('login_user');
+                window.location.href = "index.html";
+            });
+
+            $("#guanliyuandenglu").click(function(){
+                window.location.href = "controllerLogin.html"
+            });
+            function as(val) {
+                sessionStorage.setItem("seehourse",JSON.stringify(val));
+                window.location.href = "house.html"
+            }
+        }
+    </script>
+
+
+
+</head>
+<body class="housecontainer">
+<br/>
+<h1>房源列表</h1>
+<br/><br/>
+<div class="with:80%">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>地址</th>
+            <th>价格</th>
+            <th>简介</th>
+            <th>日期</th>
+            <th>查看详细情况</th>
+        </tr>
+        </thead>
+        <tbody id="a">
+        </tbody>
+    </table>
+</div>
+<div class="form-group">
+    <div class="col-sm-2 control-label" id="ad">
+    </div>
+    <button id="guanliyuandenglu">管理员登录</button>
+</div>
+</body>
+</html>

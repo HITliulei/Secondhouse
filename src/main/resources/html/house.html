@@ -1,0 +1,265 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>根据地址查询经纬度</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=aeiHIIgeMRuvbpx4aBRZZ6z2C97bq6x7">
+        //v2.0版本的引用方式：src="http://api.map.baidu.com/api?v=2.0&ak=您的密钥"
+    </script>
+    <script src="js/jquery-1.8.3.js"></script>
+</head>
+<body style="background:#CBE1FF">
+<div style="width:730px;margin:auto;">
+    <div>
+        房子名称  :  <span id="h_name"></span>
+        <br>
+        房子价格 :  <span id="h_price"></span>
+        <br>
+        房子简介  :  <span id="h_produce"></span>
+        <br>
+        房子地理位置  : <span id="h_address"></span>
+    </div>
+    <div id="container"
+         style="position: relative;
+                margin-top:10px;
+                width: 730px;
+                height: 590px;
+                top: 50px;
+                border: 1px solid gray;
+                overflow:hidden;">
+    </div>
+    <div style="position:relative;margin-top: 70px" >
+        <button onclick="buy()">预定二手房</button>
+        <button onclick="sappraise()">查看评论</button>
+        <button onclick="anwser()">查看问题和答案</button>
+        <button onclick="sendmessage()">与二手房拥有者通信</button>
+    </div>
+    <br>
+    <div style="position:relative;margin-top: 30px" >
+        房子评论  :  <span id="h_appraise"></span>
+        <br>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    function sappraise() {
+        var hourse = JSON.parse(sessionStorage.getItem('seehourse'));
+        $.ajax({
+            url:'http://localhost:8088/secondhouse/appraiseservice/seehouseappraise/'+hourse.h_id,
+            type:'get',
+            dataType:[],
+            success:function (data) {
+                var obj = eval(data)
+                for(var i =0 ; i<obj.length;i++){
+                    var val = obj[i]
+                    console.log(val)
+                    $("#h_appraise").append('<br>');
+                    $("#h_appraise").append('<p>评论'+i+'为'+val.a_content+'</p>');
+                }
+            },error:function () {
+                alert("asdfasdf")
+            }
+        })
+    }
+
+    function anwser(){
+        window.location.href='QuestionAndAnswer.html';
+    }
+    function buy(){
+        var hourse1 = JSON.parse(sessionStorage.getItem('seehourse'));
+        var user = JSON.parse(sessionStorage.getItem('login_user'));
+        if(hourse1.h_user_id == user.u_id){
+            alert("自己不能购买自己的二手房");
+        }
+        else{
+            sessionStorage.setItem("orderhouse",JSON.stringify(hourse1))
+            window.location.href = "orderAdd.html";
+        }
+    }
+    function sendmessage(){
+        var user = JSON.parse(sessionStorage.getItem("login_user"));
+        var hourse  = JSON.parse(sessionStorage.getItem("seehourse"));
+        console.log(user.u_id)
+        console.log(hourse.h_buyer_id)
+        if(hourse.h_buyer_id != user.u_id){
+            alert("请先预定这个房子才可以与二手房拥有者通信")
+            sessionStorage.setItem("orderhouse",JSON.stringify(hourse))
+            window.location.href = "orderAdd.html";
+        }else{
+            var xiaoxi =prompt("请输入消息内容","");
+            if (xiaoxi!=null && xiaoxi!=""){
+            $.ajax({
+                url:'http://localhost:8088/secondhouse/messageService/sendmessage?senderid='+user.u_id+'&content='+xiaoxi+'&recievedid='+hourse.h_user_id,
+                type:'get',
+                success:function () {
+                    alert("发送消息成功");
+                    window.location.href = 'house.html';
+                },error:function () {
+                    alert("发送消息失败");
+                    window.location.href = 'house.html';
+                }
+            })
+        }else{
+            alert("写入消息有误")
+        }
+        }
+    }
+    window.onload = function(){
+        var hourse = JSON.parse(sessionStorage.getItem('seehourse'));
+        document.getElementById("h_name").innerHTML = '<p style="color: black">'+hourse.h_name+'</p>'
+        document.getElementById("h_price").innerHTML = '<p style="color: black">'+hourse.h_price+'元</p>'
+        document.getElementById("h_produce").innerHTML = '<p style="color: black">'+hourse.h_produce+'</p>'
+        document.getElementById("h_address").innerHTML = '<p style="color: black">'+hourse.h_address+'</p>'
+
+        var keyword =hourse.h_address;
+        var map = new BMap.Map("container");
+        map.centerAndZoom(keyword, 12);
+        map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
+        map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+        map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+        map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
+        map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
+        console.log(map)
+        var localSearch = new BMap.LocalSearch(map);
+        localSearch.enableAutoViewport(); //允许自动调节窗体大小
+        localSearch.setSearchCompleteCallback(function (searchResult) {
+            var poi = searchResult.getPoi(0);
+            map.centerAndZoom(poi.point, 13);
+            var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度
+            map.addOverlay(marker);
+            var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+            marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
+           // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+        });
+        localSearch.search(keyword);
+        function ZoomControl(){
+            // 默认停靠位置和偏移量
+            this.defaultAnchor = BMAP_ANCHOR_TOP_RIGHT;
+            this.defaultOffset = new BMap.Size(10, 10);
+        }
+
+        ZoomControl.prototype = new BMap.Control();
+        ZoomControl.prototype.initialize = function(map){
+            // 创建一个DOM元素
+            var div = document.createElement("div");
+            // 添加文字说明
+            div.appendChild(document.createTextNode("查看周边学校"));
+            // 设置样式
+            div.style.cursor = "pointer";
+            div.style.border = "1px solid gray";
+            div.style.backgroundColor = "white";
+            div.onclick = function(e){
+                map.clearOverlays();
+                var circle = new BMap.Circle(map.getBounds().getCenter(),1000,{strokeColor:"none",fillColor:"none",strokeOpacity:0});
+                map.addOverlay(circle);
+                var local =  new BMap.LocalSearch(map, {renderOptions: {map: map, autoViewport: false}});
+                local.searchNearby('学校',map.getBounds().getCenter(),1000);
+            }
+            // 添加DOM元素到地图中
+            map.getContainer().appendChild(div);
+            // 将DOM元素返回
+            return div;
+        }
+        // 创建控件
+        var schoolZoomCtrl = new ZoomControl();
+        // 添加到地图当中
+        map.addControl(schoolZoomCtrl);
+        function ZoomControl1(){
+            // 默认停靠位置和偏移量
+            this.defaultAnchor = BMAP_ANCHOR_TOP_RIGHT;
+            this.defaultOffset = new BMap.Size(10, 40);
+        }
+
+        ZoomControl1.prototype = new BMap.Control();
+        ZoomControl1.prototype.initialize = function(map){
+            // 创建一个DOM元素
+
+            var div = document.createElement("div");
+            // 添加文字说明
+            div.appendChild(document.createTextNode("查看周边餐馆"));
+            // 设置样式
+            div.style.cursor = "pointer";
+            div.style.border = "1px solid gray";
+            div.style.backgroundColor = "white";
+            div.onclick = function(e){
+                map.clearOverlays();
+                var circle = new BMap.Circle(map.getBounds().getCenter(),1000,{strokeColor:"none",fillColor:"none",strokeOpacity:0});
+                map.addOverlay(circle);
+                var local =  new BMap.LocalSearch(map, {renderOptions: {map: map, autoViewport: false}});
+                local.searchNearby('餐馆',map.getBounds().getCenter(),1000);
+            }
+            // 添加DOM元素到地图中
+            map.getContainer().appendChild(div);
+            // 将DOM元素返回
+            return div;
+        }
+        var eatZoomCtrl = new ZoomControl1();
+        // 添加到地图当中
+        map.addControl(eatZoomCtrl);
+        function ZoomControl2(){
+            // 默认停靠位置和偏移量
+            this.defaultAnchor = BMAP_ANCHOR_TOP_RIGHT;
+            this.defaultOffset = new BMap.Size(10, 70);
+        }
+
+        ZoomControl2.prototype = new BMap.Control();
+        ZoomControl2.prototype.initialize = function(map){
+            // 创建一个DOM元素
+
+            var div = document.createElement("div");
+            // 添加文字说明
+            div.appendChild(document.createTextNode("查看周边交通"));
+            // 设置样式
+            div.style.cursor = "pointer";
+            div.style.border = "1px solid gray";
+            div.style.backgroundColor = "white";
+            div.onclick = function(e){
+                map.clearOverlays();
+                var circle = new BMap.Circle(map.getBounds().getCenter(),1000,{strokeColor:"none",fillColor:"none",strokeOpacity:0});
+                map.addOverlay(circle);
+                var local =  new BMap.LocalSearch(map, {renderOptions: {map: map, autoViewport: false}});
+                local.searchNearby('交通',map.getBounds().getCenter(),1000);
+            }
+            // 添加DOM元素到地图中
+            map.getContainer().appendChild(div);
+            // 将DOM元素返回
+            return div;
+        }
+        var trafficZoomCtrl = new ZoomControl2();
+        // 添加到地图当中
+        map.addControl(trafficZoomCtrl);
+        function ZoomControl3(){
+            // 默认停靠位置和偏移量
+            this.defaultAnchor = BMAP_ANCHOR_TOP_RIGHT;
+            this.defaultOffset = new BMap.Size(10, 100);
+        }
+
+        ZoomControl3.prototype = new BMap.Control();
+        ZoomControl3.prototype.initialize = function(map){
+            // 创建一个DOM元素
+
+            var div = document.createElement("div");
+            // 添加文字说明
+            div.appendChild(document.createTextNode("查看周边医院"));
+            // 设置样式
+            div.style.cursor = "pointer";
+            div.style.border = "1px solid gray";
+            div.style.backgroundColor = "white";
+            div.onclick = function(e){
+                map.clearOverlays();
+                var circle = new BMap.Circle(map.getBounds().getCenter(),1000,{strokeColor:"none",fillColor:"none",strokeOpacity:0});
+                map.addOverlay(circle);
+                var local =  new BMap.LocalSearch(map, {renderOptions: {map: map, autoViewport: false}});
+                local.searchNearby('医院',map.getBounds().getCenter(),1000);
+            }
+            // 添加DOM元素到地图中
+            map.getContainer().appendChild(div);
+            // 将DOM元素返回
+            return div;
+        }
+        var hospitalZoomCtrl = new ZoomControl3();
+        // 添加到地图当中
+        map.addControl(hospitalZoomCtrl);
+    }
+</script>
+</html>
