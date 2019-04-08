@@ -15,36 +15,24 @@
                 $("#ad").append('<button id="selfcontral">个人中心管理</button><br>\n' +
                     '        <button id="tuichu">退出登录</button><br>');
             }
-            var url = 'http://localhost:8088/secondhouse/housecontroller/reviewhouse';
-            $.ajax({
-                url:url,
-                type:'get',
-                dataType:'json',   //回掉类型
-                success:function(data) {
+            var data = JSON.parse(sessionStorage.getItem("searchhouse"));
+            console.log(data)
                     var obj = data;
                     if(obj!=null){
                         $(obj).each(function (index) {
                             var val = obj[index];
-                            if(val.h_state == 2){
-                                $("#a").append('<tr><td>'+val.h_name+'</td><td>'+val.h_address+'</td><td>'+val.h_price+'</td><td>'+val.h_produce+'</td><td>'+val.h_date+'</td>' +
-                                    '<td id="'+index+'"></tr>');
+                                $("#a").append('<tr><td>'+val.produce+'</td><td id="'+index+'"></tr>');
                                 var button = document.createElement("input");
                                 button.type="button";
-                                button.value = "查看详细情况";
+                                button.value = "在网站上查看详细情况";
                                 button.onclick = function () {
                                     as(val)
                                 }
                                 document.getElementById(index).appendChild(button);
-                            }
                         })
                     }else{
                         alert("暂时没有房源")
                     }
-                },
-                error: function(data) {
-                    alert("未获得房源数据");
-                }
-            });
 
             $("#zhuce").click(function (){
                 window.location.href = "registry.html";
@@ -62,19 +50,19 @@
                 sessionStorage.removeItem('login_user');
                 window.location.href = "index.html";
             });
+
             $("#guanliyuandenglu").click(function(){
                 window.location.href = "controllerLogin.html"
             });
             function as(val) {
-                sessionStorage.setItem("seehourse",JSON.stringify(val));
-                window.location.href = "house.html"
+                window.location.href = val.net;
             }
         }
 
         function sousuo(){
-            var a = document.getElementById("house").value;
+            var input = document.getElementById("inputhousename").value;
             $.ajax({
-                url:'http://localhost:8088/secondhouse/housecontroller/housefind?text='+a,
+                url:'http://localhost:8088/secondhouse/housecontroller/housefind?text='+input,
                 type:'get',
                 success:function(data){
                     sessionStorage.setItem("searchhouse",JSON.stringify(data));
@@ -86,18 +74,7 @@
             })
         }
         function sousuozhanwai(){
-            var a = document.getElementById("house").value;
-            $.ajax({
-                url:'http://localhost:8088/secondhouse/housecontroller/findothers?adress='+a,
-                type:'get',
-                success:function(data){
-                    sessionStorage.setItem("searchhouse",JSON.stringify(data));
-                    window.location.href = 'index3.html';
-                },error:function(){
-                    alert("没有找到相关房子");
-                    window.location.href = 'index.html';
-                }
-            })
+            var input = document.getElementById("inputhousename");
         }
     </script>
 
@@ -107,16 +84,12 @@
 <br/>
 <h1>房源列表</h1>
 <br/><br/>
-<input type="text" placeholder="请输入房名" id="house" name="house"><button onclick="sousuo()">站内搜索</button><button onclick="sousuozhanwai()">站外搜索</button>
 <div class="with:80%">
+    <input type="text" placeholder="请输入房名" id="inputhousename"><button onclick="sousuo()">站内搜索</button><button onclick="sousuozhanwai()">站外搜索</button>
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>名称</th>
-            <th>地址</th>
-            <th>价格</th>
             <th>简介</th>
-            <th>日期</th>
             <th>查看详细情况</th>
         </tr>
         </thead>

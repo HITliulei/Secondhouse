@@ -33,6 +33,8 @@
         <button onclick="sappraise()">查看评论</button>
         <button onclick="anwser()">查看问题和答案</button>
         <button onclick="sendmessage()">与二手房拥有者通信</button>
+        <button onclick="seeaddress()">查看地理位置近似的二手房</button>
+        <button onclick="seemoney()">查看金额近似的二手房</button>
     </div>
     <br>
     <div style="position:relative;margin-top: 30px" >
@@ -79,8 +81,6 @@
     function sendmessage(){
         var user = JSON.parse(sessionStorage.getItem("login_user"));
         var hourse  = JSON.parse(sessionStorage.getItem("seehourse"));
-        console.log(user.u_id)
-        console.log(hourse.h_buyer_id)
         if(hourse.h_buyer_id != user.u_id){
             alert("请先预定这个房子才可以与二手房拥有者通信")
             sessionStorage.setItem("orderhouse",JSON.stringify(hourse))
@@ -104,6 +104,39 @@
         }
         }
     }
+
+
+    function seemoney(){
+        var hourse  = JSON.parse(sessionStorage.getItem("seehourse"));
+        var money = hourse.h_price;
+        console.log(hourse)
+        $.ajax({
+            url:'http://localhost:8088/secondhouse/housecontroller/likelymoney?money='+money,
+            type:'get',
+            success:function(data){
+                    sessionStorage.setItem("searchhouse",JSON.stringify(data));
+                    window.location.href = 'index2.html';
+            },error:function(){
+                alert("出现为位未知误");
+                window.location.href = 'house.html';
+            }
+        })
+    }
+
+    function seeaddress(){
+        var hourse  = JSON.parse(sessionStorage.getItem("seehourse"));
+        $.ajax({
+            url:'http://localhost:8088/secondhouse/housecontroller/findhousebydistance?address='+hourse.h_address,
+            type:'get',
+            success:function(data){
+                    sessionStorage.setItem("searchhouse",JSON.stringify(data));
+                    window.location.href = 'index2.html';
+            },error:function(){
+                alert("出现未知错误");
+                window.location.href = 'house.html';
+            }
+        })
+    }
     window.onload = function(){
         var hourse = JSON.parse(sessionStorage.getItem('seehourse'));
         document.getElementById("h_name").innerHTML = '<p style="color: black">'+hourse.h_name+'</p>'
@@ -111,7 +144,7 @@
         document.getElementById("h_produce").innerHTML = '<p style="color: black">'+hourse.h_produce+'</p>'
         document.getElementById("h_address").innerHTML = '<p style="color: black">'+hourse.h_address+'</p>'
 
-        var keyword =hourse.h_address;
+        var keyword =hourse.h_address; //得到传入的二手房地址参数
         var map = new BMap.Map("container");
         map.centerAndZoom(keyword, 12);
         map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
@@ -129,7 +162,6 @@
             map.addOverlay(marker);
             var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
             marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
-           // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
         });
         localSearch.search(keyword);
         function ZoomControl(){

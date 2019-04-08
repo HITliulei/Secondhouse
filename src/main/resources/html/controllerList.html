@@ -73,7 +73,21 @@
             }
 
             function as1(val){
-                $.get("http://localhost:8088/secondhouse/housecontroller/deletehouse/"+val.h_id);
+                $.get("http://localhost:8088/secondhouse/housecontroller/deletehouse/"+val.h_id,function(){
+                    var xiaoxi = 'The second-hand house you posted does not meet the standard and has been cancelled.'
+                $.ajax({
+                url:'http://localhost:8088/secondhouse/messageService/sendmessage?senderid=1&content='+xiaoxi+'&recievedid='+val.h_user_id,
+                type:'get',
+                success:function () {
+                    alert("注销成功");
+                    window.location.href = 'house.html';
+                },error:function () {
+                    alert("注销失败");
+                    window.location.href = 'house.html';
+                }
+            })
+                });
+                
                 window.location.href = "controllerList.html";
             }
         }
