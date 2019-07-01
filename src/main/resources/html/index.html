@@ -20,7 +20,7 @@
                 url:url,
                 type:'get',
                 dataType:'json',   //回掉类型
-                success:function(data) {
+                success:function(data){
                     var obj = data;
                     if(obj!=null){
                         $(obj).each(function (index) {
@@ -66,8 +66,25 @@
                 window.location.href = "controllerLogin.html"
             });
             function as(val) {
-                sessionStorage.setItem("seehourse",JSON.stringify(val));
-                window.location.href = "house.html"
+                var l = JSON.parse(sessionStorage.getItem('login_user'));
+                if(l ==null){
+                    sessionStorage.setItem("seehourse",JSON.stringify(val));
+                    window.location.href = "house.html"
+                }else{
+                    $.ajax({
+                        url:"http://localhost:8088/secondhouse/recommend/addScore?uid="+l.u_id+"&hid="+val.h_id+"&score=1",
+                        type:'get',
+                        success:function () {
+                            sessionStorage.setItem("seehourse",JSON.stringify(val));
+                            window.location.href = "house.html";
+                        },error:function () {
+                            alert("加权失败");
+                            sessionStorage.setItem("seehourse",JSON.stringify(val));
+                            window.location.href = "house.html";
+                        }
+                    })
+
+                }
             }
         }
 
@@ -96,18 +113,46 @@
                 },error:function(){
                     alert("没有找到相关房子");
                     window.location.href = 'index.html';
-                }
+        }
             })
         }
+        function tuijian1(){
+            var login_user = JSON.parse(sessionStorage.getItem('login_user'));
+            if(login_user ==null){
+                alert("请先登录");
+                window.location.href = "denglu.html"
+            }else{
+                $.ajax({
+                    url:"http://localhost:8088/secondhouse/recommend/recommendByusersaddress/"+login_user.u_id,
+                    type:'get',
+                    success:function(data){
+                        sessionStorage.setItem("searchhouse",JSON.stringify(data));
+                        window.location.href = 'index2.html';
+                    },error:function(){
+                        alert("没有找到相关房子");
+                        window.location.href = 'index.html';
+                    }
+                })
+            }
+        }
+
+        function tuijian2(){
+            var login_user = JSON.parse(sessionStorage.getItem('login_user'));
+            if(login_user ==null){
+                alert("请先登录");
+                window.location.href = "denglu.html"
+            }else{
+
+            }
+        }
     </script>
-
-
 </head>
 <body class="housecontainer">
 <br/>
 <h1>房源列表</h1>
 <br/><br/>
-<input type="text" placeholder="请输入房名" id="house" name="house"><button onclick="sousuo()">站内搜索</button><button onclick="sousuozhanwai()">站外搜索</button>
+<input type="text" placeholder="请输入房名" id="house" name="house"><button onclick="sousuo()">站内搜索</button>
+<button onclick="sousuozhanwai()">站外搜索</button><button onclick="tuijian1()">基于人口统计学的推荐系统</button><button onclick="tuijian2()">基于用户的协同过滤推荐</button>
 <div class="with:80%">
     <table class="table table-hover">
         <thead>

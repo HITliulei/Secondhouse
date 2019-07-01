@@ -34,6 +34,7 @@
         <button onclick="anwser()">查看问题和答案</button>
         <button onclick="sendmessage()">与二手房拥有者通信</button>
         <button onclick="seeaddress()">查看地理位置近似的二手房</button>
+        <button onclick="seenearhouse()">查看地理位置近似的别的网站的二手房</button>
         <button onclick="seemoney()">查看金额近似的二手房</button>
     </div>
     <br>
@@ -44,10 +45,32 @@
 </div>
 </body>
 <script type="text/javascript">
-    function sappraise() {
+    
+    function seenearhouse() {
         var hourse = JSON.parse(sessionStorage.getItem('seehourse'));
         $.ajax({
-            url:'http://localhost:8088/secondhouse/appraiseservice/seehouseappraise/'+hourse.h_id,
+            url:'http://localhost:8088/secondhouse/housecontroller/near?adress='+hourse.h_address+"&hid="+hourse.h_id+"&uid="+login_user.u_id,
+            type:'get',
+            success:function(data){
+                sessionStorage.setItem("searchhouse",JSON.stringify(data));
+                window.location.href = 'index3.html';
+            },error:function(){
+                alert("没有找到相关房子");
+                window.location.href = 'index.html';
+            }
+        })
+    }
+    function sappraise() {
+        var hourse = JSON.parse(sessionStorage.getItem('seehourse'));
+        var login_user = JSON.parse(sessionStorage.getItem('login_user'));
+        var a = 0;
+        if(login_user == null){
+            a =0;
+        }else{
+            a = login_user.u_id;
+        }
+        $.ajax({
+            url:'http://localhost:8088/secondhouse/appraiseservice/seehouseappraise?hid='+hourse.h_id+'&uid='+a,
             type:'get',
             dataType:[],
             success:function (data) {
@@ -109,9 +132,10 @@
     function seemoney(){
         var hourse  = JSON.parse(sessionStorage.getItem("seehourse"));
         var money = hourse.h_price;
+        var login_user = JSON.parse(sessionStorage.getItem("login_user"));
         console.log(hourse)
         $.ajax({
-            url:'http://localhost:8088/secondhouse/housecontroller/likelymoney?money='+money,
+            url:'http://localhost:8088/secondhouse/housecontroller/likelymoney?money='+money+"&hid="+hourse.h_id+"&uid="+login_user.u_id,
             type:'get',
             success:function(data){
                     sessionStorage.setItem("searchhouse",JSON.stringify(data));
@@ -124,9 +148,10 @@
     }
 
     function seeaddress(){
+        var login_user = JSON.parse(sessionStorage.getItem("login_user"));
         var hourse  = JSON.parse(sessionStorage.getItem("seehourse"));
         $.ajax({
-            url:'http://localhost:8088/secondhouse/housecontroller/findhousebydistance?address='+hourse.h_address,
+            url:'http://localhost:8088/secondhouse/housecontroller/findhousebydistance?address='+hourse.h_address+"&hid="+hourse.h_id+"&uid="+login_user.u_id,
             type:'get',
             success:function(data){
                     sessionStorage.setItem("searchhouse",JSON.stringify(data));

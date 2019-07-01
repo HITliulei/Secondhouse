@@ -45,7 +45,7 @@
                                 button1.value = "删除";
                                 button1.onclick = function () {
                                     $.ajax({
-                                        url:'http://localhost:8088/secondhouse/housecontroller/deleteHourse?id='+val.h_id,
+                                        url:'http://localhost:8088/secondhouse/housecontroller/deletehouse?id='+val.h_id,
                                         type:'delete',
                                         success:function () {
                                             alert("删除成功");

@@ -10,13 +10,11 @@ spring:
     url: jdbc:mysql://localhost:3306/secondhouse?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: root
     password: root
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    schema:
+#      - classpath:sql/table.sql
+#    initialization-mode: always
 #    type: com.alibaba.druid.pool.DruidDataSource
-  mvc:
-    view:
-      prefix: classpath:/templates/
-      suffix: .html
-
 
 mybatis:
   # 指定全局配置文件位置
