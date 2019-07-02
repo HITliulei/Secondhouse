@@ -1,16 +1,5 @@
 package com.ll.secondhouse.utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Map;
-
 public class PointToDistance {
 
     public static void main(String[] args) {
@@ -26,8 +15,6 @@ public class PointToDistance {
         double t3 = Math.sin(lat_a / PK) * Math.sin(lat_b / PK);
 
         double tt = Math.acos(t1 + t2 + t3);
-
-        System.out.println("两点间的距离：" + 6366000 * tt + " 米");
         return 6366000 * tt;
     }
     // 地球半径
@@ -47,6 +34,6 @@ public class PointToDistance {
         s = s * EARTH_RADIUS;
         s = Math.round(s * 10000) / 10000;
         double ss = s * 1.0936132983377;
-        System.out.println("两点间的距离是：" + s + "米" + "," + (int) ss + "码");
+
     }
 }

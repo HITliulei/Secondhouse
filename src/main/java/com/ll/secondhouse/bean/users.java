@@ -6,13 +6,16 @@ public class users {
     private String u_password;
     private String u_email;
     private String u_data;
+    private String u_address;
 
-    public users(int u_id, String u_username, String u_password, String u_email, String u_data) {
+
+    public users(int u_id, String u_username, String u_password, String u_email, String u_data, String u_address) {
         this.u_id = u_id;
         this.u_username = u_username;
         this.u_password = u_password;
         this.u_email = u_email;
         this.u_data = u_data;
+        this.u_address = u_address;
     }
 
     public int getU_id() {
@@ -55,6 +58,13 @@ public class users {
         this.u_data = u_data;
     }
 
+    public String getU_address() {
+        return u_address;
+    }
+
+    public void setU_address(String u_address) {
+        this.u_address = u_address;
+    }
     @Override
     public String toString() {
         return "users{" +
@@ -63,6 +73,7 @@ public class users {
                 ", u_password='" + u_password + '\'' +
                 ", u_email='" + u_email + '\'' +
                 ", u_data='" + u_data + '\'' +
+                ", u_address='" + u_address + '\'' +
                 '}';
     }
 }

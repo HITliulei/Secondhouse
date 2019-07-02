@@ -10,15 +10,6 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 获取经纬度
- *
- * @author jueyue 返回格式：Map map map.put("status",
- * reader.nextString());//状态 map.put("result", list);//查询结果
- * list>
- * 密钥:C0a9eecc5b366bde41202sljdflsjfsldjf   需要自己去申请
- * Created by hellcat on 2016/7/27.
- */
 public class GetLatAndLngByBaidu {
 
     public static Map getLngAndLat(String address){

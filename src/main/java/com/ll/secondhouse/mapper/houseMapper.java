@@ -40,4 +40,8 @@ public interface houseMapper {
 
     @Select("select * from house where h_name like  CONCAT('%',#{string},'%')")
     public List<house> getlikelyhouse(String string);
+
+
+    @Select("SELECT * FROM house WHERE h_state != 1")
+    public List<house> getallguoshenhouse();
 }

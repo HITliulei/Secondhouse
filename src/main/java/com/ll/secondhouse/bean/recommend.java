@@ -13,9 +13,6 @@ public class recommend {
         this.score = score;
     }
 
-    public recommend() {
-    }
-
     public int getT_id() {
         return t_id;
     }

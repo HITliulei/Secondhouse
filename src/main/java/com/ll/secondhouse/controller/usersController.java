@@ -1,6 +1,4 @@
 package com.ll.secondhouse.controller;
-
-
 import com.ll.secondhouse.bean.users;
 import com.ll.secondhouse.mapper.usersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +18,14 @@ public class usersController {
     usersMapper usersMapper;
 
     @RequestMapping(value = "checkusername",method = RequestMethod.GET)
-    public users checkusername(@RequestParam("username") String username){
+        public users checkusername(@RequestParam("username") String username){
         return usersMapper.checkusernmae(username);
     }
 
     @RequestMapping(value = "logincheck",method = RequestMethod.GET)
     public users logincheck(@RequestParam("username") String username , @RequestParam("password") String password){
-        System.out.println("username : "+ username);
-        return usersMapper.logincheck(username,password);
+        users users = usersMapper.logincheck(username,password);
+        return users;
     }
 
     @RequestMapping(value = "updateusers",method = RequestMethod.GET)
@@ -44,15 +42,14 @@ public class usersController {
     }
 
     @RequestMapping(value = "registry",method = RequestMethod.POST)
-    public int registryUsers(@RequestParam("username")String username,@RequestParam("password")String password,@RequestParam("email")String email){
+    public int registryUsers(@RequestParam("username")String username,@RequestParam("password")String password,@RequestParam("email")String email,@RequestParam("address")String address){
         System.out.println("注册新用户");
-        users users = new users(0,username,password,email,new SimpleDateFormat().format(new Date()));
+        users users = new users(0,username,password,email,new SimpleDateFormat().format(new Date()),address);
         return usersMapper.registry(users);
     }
 
     @RequestMapping(value = "controller",method = RequestMethod.GET)
     public users controllerdenglu(@RequestParam("username")String username,@RequestParam("password")String password){
-
         if (username.equals(username) && password.equals(password)){
             System.out.println(username);
             System.out.println(password);
@@ -64,4 +61,10 @@ public class usersController {
         }
     }
 
+
+    @RequestMapping(value = "l",method = RequestMethod.POST)
+    public users l(@RequestParam(value = "username",required = false) String username , @RequestParam(value = "password",required = false) String password){
+        System.out.println("username : "+ username);
+        return usersMapper.logincheck(username,password);
+    }
 }

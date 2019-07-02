@@ -2,7 +2,9 @@ package com.ll.secondhouse.controller;
 
 import com.ll.secondhouse.bean.house;
 import com.ll.secondhouse.bean.others;
+import com.ll.secondhouse.bean.recommend;
 import com.ll.secondhouse.mapper.houseMapper;
+import com.ll.secondhouse.mapper.recommendMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
@@ -15,6 +17,9 @@ import com.ll.secondhouse.utils.*;
 public class houseController {
     @Autowired
     houseMapper houseMapper;
+
+    @Autowired
+    recommendMapper recommendMapper;
 
     @RequestMapping(value = "registryhouse",method = RequestMethod.POST)
     public int addhouse(@RequestParam("name")String name,@RequestParam("address")String address,@RequestParam("produce")String produce,@RequestParam("price")double price,@RequestParam("userid")int id){
@@ -104,7 +109,7 @@ public class houseController {
     }
 
     @RequestMapping("likelymoney")
-    public List<house> getlikelehousebymoney(@RequestParam("money")double money){
+    public List<house> getlikelehousebymoney(@RequestParam("money")double money,@RequestParam("hid")int hid,@RequestParam("uid")int uid){
         List<house> houses = houseMapper.reviewhouse();
         List<house> house = new ArrayList<>();
         for(int i =0;i<houses.size();i++){
@@ -113,13 +118,21 @@ public class houseController {
                 house.add(houses.get(i));
             }
         }
-        System.out.println(house);
+        recommend recommend = recommendMapper.checkScore(uid,hid);
+        if(recommend == null){
+            recommendMapper.insertData(new recommend(0,uid,hid,3));
+        }else{
+            int sc = recommend.getScore();
+            if(sc<=3){
+                recommendMapper.updateScore(new recommend(0,uid,hid,3));
+            }
+        }
         return house;
     }
 
 
     @RequestMapping("findhousebydistance")
-    public List<house> getlikehousebuaddress(@RequestParam("address")String address){
+    public List<house> getlikehousebuaddress(@RequestParam("address")String address,@RequestParam("hid")int hid,@RequestParam("uid")int uid){
         double a1 = (double)GetLatAndLngByBaidu.getLngAndLat(address).get("lng");
         double a2 = (double)GetLatAndLngByBaidu.getLngAndLat(address).get("lat");
         List<house> list = houseMapper.reviewhouse();
@@ -132,20 +145,49 @@ public class houseController {
                 list1.add(list.get(1));
             }
         }
+        recommend recommend = recommendMapper.checkScore(uid,hid);
+        if(recommend == null){
+            recommendMapper.insertData(new recommend(0,uid,hid,3));
+        }else{
+            int sc = recommend.getScore();
+            if(sc<=3){
+                recommendMapper.updateScore(new recommend(0,uid,hid,3));
+            }
+        }
         return list1;
     }
-
 
     @RequestMapping("findothers")
     public List<others> getothers(@RequestParam("adress")String name) throws Exception{
         List<others> lists = new ArrayList<>();
-        String url = "https://bj.lianjia.com/ershoufang/rs"+name+"/";
-        List<String> list = JsoupHelper.fecthByMap(url,"//div[@class='info clear']");
+        String url = "https://hrb.58.com/ershoufang/?key="+name;
+        List<String> list = JsoupHelper.fecthByMap(url,"//div[@class='list-info']");
         for(int i=0;i<list.size();i++){
             others others = new others(list.get(i),url);
             lists.add(others);
         }
         System.out.println(lists);
+        return lists;
+    }
+
+    @RequestMapping("near")
+    public List<others> near(@RequestParam("adress")String name,@RequestParam("uid")int uid,@RequestParam("hid")int hid) throws Exception{
+        List<others> lists = new ArrayList<>();
+        String url = "https://hrb.58.com/ershoufang/?key="+name;
+        List<String> list = JsoupHelper.fecthByMap(url,"//div[@class='list-info']");
+        for(int i=0;i<list.size();i++){
+            others others = new others(list.get(i),url);
+            lists.add(others);
+        }
+        recommend recommend = recommendMapper.checkScore(uid,hid);
+        if(recommend == null){
+            recommendMapper.insertData(new recommend(0,uid,hid,3));
+        }else{
+            int sc = recommend.getScore();
+            if(sc<=3){
+                recommendMapper.updateScore(new recommend(0,uid,hid,3));
+            }
+        }
         return lists;
     }
 }
