@@ -18,9 +18,6 @@ public class users {
         this.u_address = u_address;
     }
 
-    public users(){
-    }
-
     public int getU_id() {
         return u_id;
     }
