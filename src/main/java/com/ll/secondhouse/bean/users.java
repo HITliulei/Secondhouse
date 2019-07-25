@@ -17,10 +17,11 @@ public class users {
         this.u_data = u_data;
         this.u_address = u_address;
     }
-
-    public users(){
-
-    }
+//  I commented out the code.
+    //Then it's useful. Maybe you've released the modified code for error1.
+//    public users(){
+//
+//    }
 
     public int getU_id() {
         return u_id;
