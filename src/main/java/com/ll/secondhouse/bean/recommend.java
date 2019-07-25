@@ -12,6 +12,10 @@ public class recommend {
         this.h_id = h_id;
         this.score = score;
     }
+//  I commented out the code.
+//    public recommend(){
+//
+//    }
 
     public int getT_id() {
         return t_id;
