@@ -17,10 +17,7 @@ public class PointToDistance {
         double tt = Math.acos(t1 + t2 + t3);
         return 6366000 * tt;
     }
-    // 地球半径
     private static final double EARTH_RADIUS = 6370996.81;
-
-    // 弧度
     private static double radian(double d) {
         return d * Math.PI / 180.0;
     }
