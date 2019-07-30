@@ -76,8 +76,6 @@ public class Recommend {
             }
         }
         System.out.println(indexid);
-
-
         Map<Integer,Integer> nearmap = usersmap.get(indexid);
         List<Integer> record = new ArrayList<>();
         for(Integer data:nearmap.keySet()){
