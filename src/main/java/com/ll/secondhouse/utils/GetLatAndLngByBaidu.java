@@ -11,7 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GetLatAndLngByBaidu {
-
+/**
+ * create by: zmz
+ * description: 
+ * create time: 2019/7/30 20:52
+ * @param address
+ * @return java.util.Map
+ */
     public static Map getLngAndLat(String address){
         Map map=new HashMap();
         String url = "http://api.map.baidu.com/geocoder/v2/?address="+address+"&output=json&ak=aeiHIIgeMRuvbpx4aBRZZ6z2C97bq6x7";
@@ -33,7 +39,12 @@ public class GetLatAndLngByBaidu {
         }
         return map;
     }
-
+/**
+ * description: 
+ * create time: 2019/7/30 20:52
+ * @param num
+ * @return double
+ */
     public static double getDecimal(double num) {
         if (Double.isNaN(num)) {
             return 0;

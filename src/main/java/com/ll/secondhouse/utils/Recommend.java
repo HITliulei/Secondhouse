@@ -76,13 +76,6 @@ public class Recommend {
             }
         }
         System.out.println(indexid);
-//        for(int i =0;i<usersList.size();i++){
-//            if(indexid == usersList.get(i).getU_id()){
-//                mostnearuser = usersList.get(i);
-//                break;
-//            }
-//        }
-//        System.out.println("最为相近的用户为"+mostnearuser);
         Map<Integer,Integer> nearmap = usersmap.get(indexid);
         List<Integer> record = new ArrayList<>();
         for(Integer data:nearmap.keySet()){

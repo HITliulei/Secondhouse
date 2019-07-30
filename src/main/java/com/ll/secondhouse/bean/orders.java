@@ -17,7 +17,10 @@ public class orders {
         this.h_money = h_money;
         this.o_state = o_state;
     }
-
+//  I commented out the code.
+//    public orders(){
+//
+//    }
     @Override
     public String toString() {
         return "orders{" +

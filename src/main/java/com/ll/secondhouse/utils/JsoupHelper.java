@@ -54,8 +54,10 @@ public class JsoupHelper {
                 String string = node.getTextContent().replace("关注","");
                 String string1 = string.replace("加入对比","");
                 String string2 = string1.replace("\n","");
-                String strin3 = string2.replace("\t","");
-                list.add(string2);
+                String string3 = string2.replace("\t","");
+                // When you crawl a web page, you should delete the empty symbols.
+//                list.add(string2);
+                list.add(string3);
                 nodeMap.put(node.getTextContent(), node.getAttributes().getNamedItem("href")!=null ?
                         node.getAttributes().getNamedItem("href").getTextContent() : "");
             }
@@ -63,12 +65,12 @@ public class JsoupHelper {
 
         return list;
     }
-
-    public static void main(String[] args) throws Exception{
-//        System.out.println(fecthByMap("https://bj.lianjia.com/ershoufang/rs%E5%93%88%E5%B7%A5%E5%A4%A7/","//div[@class='info clear']").get(1));
-        //div[@class='list-info']
-        System.out.println(fecthByMap("https://hrb.58.com/ershoufang/?key=%E5%93%88%E5%B7%A5%E5%A4%A7","//div[@class='list-info']").get(1));
-    }
+// no need
+//    public static void main(String[] args) throws Exception{
+////        System.out.println(fecthByMap("https://bj.lianjia.com/ershoufang/rs%E5%93%88%E5%B7%A5%E5%A4%A7/","//div[@class='info clear']").get(1));
+//        //div[@class='list-info']
+//        System.out.println(fecthByMap("https://hrb.58.com/ershoufang/?key=%E5%93%88%E5%B7%A5%E5%A4%A7","//div[@class='list-info']").get(1));
+//    }
 }
 
 
