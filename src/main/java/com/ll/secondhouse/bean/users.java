@@ -18,7 +18,6 @@ public class users {
         this.u_address = u_address;
     }
 //  I commented out the code.
-
     //Then it's useful. Maybe you've released the modified code for error1.
 //    public users(){
 //
